@@ -4,26 +4,124 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Formulário de Feedback</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    #resultado {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      transition: opacity 1s ease;
+    }
+  </style>
 </head>
 <body>
   <div class="form-container">
-    <h1>Envie seu Feedback</h1>
-    <form id="feedbackForm" action="submit.php" method="POST">
-      <label for="nome">Nome:</label>
+    <h1>📣 Envie seu Feedback</h1>
+    <form id="feedbackForm">
+      <label for="nome">👤 Nome:</label>
       <input type="text" id="nome" name="nome" required>
 
-      <label for="email">Email:</label>
+      <label for="email">📧 Email:</label>
       <input type="email" id="email" name="email" required>
 
-      <label for="mensagem">Mensagem:</label>
-      <textarea id="mensagem" name="mensagem" required></textarea>
+      <label for="mensagem">💬 Mensagem:</label>
+      <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
 
       <button type="submit">Enviar</button>
     </form>
     <div id="resultado"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const form = document.getElementById('feedbackForm');
+    const resultado = document.getElementById('resultado');
+
+    // Validação em tempo real
+    ['nome', 'email', 'mensagem'].forEach(id => {
+      const campo = document.getElementById(id);
+      campo.addEventListener('input', () => {
+        campo.style.borderColor = campo.value.trim() === '' ? 'red' : 'green';
+      });
+    });
+
+    // Envio do formulário
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mensagem = document.getElementById('mensagem').value.trim();
+
+      if (nome && email && mensagem) {
+        resultado.innerHTML = `🎉 Obrigado, <strong>${nome}</strong>! Seu feedback foi enviado com sucesso.`;
+        resultado.style.color = 'green';
+        resultado.style.opacity = '0';
+        setTimeout(() => {
+          resultado.style.opacity = '1';
+        }, 100);
+
+        form.reset();
+        ['nome', 'email', 'mensagem'].forEach(id => {
+          document.getElementById(id).style.borderColor = '#ccc';
+        });
+      } else {
+        resultado.textContent = '⚠️ Preencha todos os campos corretamente.';
+        resultado.style.color = 'red';
+      }
+    });
+  </script>
 </body>
 </html>
